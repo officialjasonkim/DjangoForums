@@ -1,0 +1,56 @@
+{% extends "forum/base.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="top">
+            <h5>Post + Replies</h5>
+            <a class="btn btn-secondary bg-steel btn-sm" href="{% url 'reply-create' object.id %}" style="float:right">Reply</a>
+        </div>
+        <article class="media content-section">
+            <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
+            <div class="media-body">
+                <div class="article-metadata">
+                    <a class="mr-2" href="{% url 'user-posts' object.author %}">{{ object.author }}</a>
+                    <small class="text-muted">{{ object.date_posted }}</small>
+                    {% if object.author == user %}
+                    <div>
+                        <a class="btn btn-secondary btn-sm mt-1 mb-1 bg-steel" href="{% url 'post-update' object.id %}">Edit</a>
+                        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <h2 class="article-title">{{ object.title }}</h2>
+                <p class="article-content">{{ object.content }}</p>
+            </div>
+        </article>
+        {% for reply in replies %}
+            {% if reply.post.id == object.id %}
+                <article class="media content-section">
+                        <img class="rounded-circle article-img" src="{{ reply.author.profile.image.url }}">
+                        <div class="media-body">
+                            <div class="article-metadata">
+                                <a class="mr-2" href="{% url 'user-posts' reply.author %}">{{ reply.author }}</a>
+                                <small class="text-muted">{{ reply.date_posted }}</small>
+                                {% if reply.author == user %}
+                                <div>
+                                    <a class="btn btn-secondary btn-sm mt-1 mb-1 bg-steel" href="{% url 'reply-update' reply.id %}">Edit</a>
+                                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'reply-delete' reply.id %}">Delete</a>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <p class="article-content">{{ reply.content }}</p>
+                        </div>
+                </article>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div class="content-section">
+            <h1>Welcome to DjangoForums</h1>
+            <p>Here, people are free to share their thoughs, ideas, wants, whatever really. This was also made by Jason Kim as a project to learn about the Django Framework. If you want to see the posts, log in or register today!</p>
+            <div class="border-top pt-3 pb-2">
+                <a href="{% url 'login' %}"><button class="btn btn-secondary bg-steel">Login</button></a>
+                <a href="{% url 'register' %}"><button class="btn btn-secondary bg-steel">Register</button></a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock content%}

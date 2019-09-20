@@ -1,0 +1,73 @@
+{% extends "forum/base.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="top">
+            <h5>All Posts:</h5>
+            <a class="btn btn-secondary bg-steel btn-sm" href="{% url 'post-create' %}" style="float:right">New Post</a>
+        </div>
+        {% for post in posts%}
+            <article class="media content-section">
+                <img class="rounded-circle article-img" src="{{ post.author.profile.image.url }}">
+                <div class="media-body">
+                    <div class="article-metadata">
+                        <a class="mr-2" href="{% url 'user-posts' post.author %}">{{ post.author }}</a>
+                        <small class="text-muted">{{ post.date_posted }}</small>
+                    </div>
+                    <h2><a class="article-title" href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+                    <p class="article-content">{{ post.content }}</p>
+                </div>
+            </article>
+        {% endfor %}
+
+        {% if is_paginated %}
+            <ul class="pagination mb-4">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">First</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link">Previous</a>
+                </li>
+            {% endif %}
+            
+            <li class="page-item active">
+                <a class="page-link" href="">{{ page_obj.number }}</a>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link">Next</a>
+                </li>
+                <li class="page-item disabled">
+                    <a class="page-link">Last</a>
+                </li>
+            {% endif %}
+            </ul>
+        {% endif %}
+        
+    {% else %}
+        <div class="content-section">
+            <h1>Welcome to DjangoForums</h1>
+            <p>Here, people are free to share their thoughs, ideas, wants, whatever really. This was also made by Jason Kim as a project to learn about the Django Framework. If you want to see the posts, log in or register today!</p>
+            <div class="border-top pt-3 pb-2">
+                <a href="{% url 'login' %}"><button class="btn btn-secondary bg-steel">Login</button></a>
+                <a href="{% url 'register' %}"><button class="btn btn-secondary bg-steel">Register</button></a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock content%}
