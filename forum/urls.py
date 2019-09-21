@@ -8,6 +8,7 @@ urlpatterns = [
     path('', PostListView.as_view(), name='forum-home'),
     path('devlog/', views.devlog, name="forum-devlog"),
     path('about/', views.about, name='forum-about'),
+    path('back/<int:post_pk>', views.back, name='back'),
 
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post/new/', PostCreateView.as_view(), name='post-create'),

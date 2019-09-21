@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from .models import Post, Reply
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView, TemplateView
 from django.urls import reverse
+import math
 
 def home(request):
     context = {
@@ -135,3 +136,14 @@ def about(request):
         'title': "About"
     }
     return render(request, 'forum/about.html', context)
+
+def back(request, post_pk):
+    page = 1
+    counter = -1
+    posts = reversed(Post.objects.all())
+    for post in posts:
+        counter += 1
+        if post.pk == post_pk:
+            break
+    page += int(math.floor(counter/5))
+    return HttpResponseRedirect('/?page='+str(page))

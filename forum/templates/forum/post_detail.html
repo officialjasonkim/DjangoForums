@@ -3,7 +3,7 @@
 {% block content %}
     {% if user.is_authenticated %}
         <div class="top">
-            <h5>Post + Replies</h5>
+            <h5><a style="color: black" href="{% url 'back' object.id %}">&lt; Back</a></h5>
             <a class="btn btn-secondary bg-steel btn-sm" href="{% url 'reply-create' object.id %}" style="float:right">Reply</a>
         </div>
         <article class="media content-section">
